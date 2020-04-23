@@ -58,6 +58,7 @@ namespace SimpleDurableFunctionApp
         {
             string name = context.GetInput<string>();
 
+            //log = context.CreateReplaySafeLogger(log);
             if (!context.IsReplaying)
             {
                 log.LogInformation($"Executing Orchestrator with an input of '{name}'");
@@ -65,10 +66,14 @@ namespace SimpleDurableFunctionApp
 
             var outputs = new List<string>();
 
-            // Replace "hello" with the name of your Durable Activity Function.
             outputs.Add(await context.CallActivityAsync<string>("Function1_Hello", $"{name} from Tokyo"));
+            //context.SetCustomStatus("Tokyo");
+            
             outputs.Add(await context.CallActivityAsync<string>("Function1_Hello", $"{name} from Seattle"));
+            //context.SetCustomStatus("Tokyo");
+            
             outputs.Add(await context.CallActivityAsync<string>("Function1_Hello", $"{name} from London"));
+            //context.SetCustomStatus("Tokyo");
 
             // returns ["Hello x from Tokyo!", "Hello x from Seattle!", "Hello x from London!"]
             log.LogInformation($"Output: { string.Join(", ", outputs ) }");
